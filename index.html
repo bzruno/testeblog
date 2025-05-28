@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR" <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bem-vindo ao Meu Blog - Meu Blog</title>
+<link rel="stylesheet" href="/static/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+  <main>
+<h1><a href="/">Bem-vindo ao Meu Blog</a></h1>
+<h2>👋 Introdução</h2>
+<p>Meu nome é Bruno e decidi criar um blog.</p>
+<p><figure><img alt="Eu" src="/images/eva.gif"/><figcaption>Eu</figcaption></figure></p>
+<hr/>
+<h2>📁 Categorias</h2>
+<ul class="category-list"><li><a href="/categorias/grana" id="tag_grana"><span></span>Grana</a></li> <li><a href="/categorias/pessoal" id="tag_pessoal"><span></span>Pessoal</a></li> <li><a href="/categorias/reclamacao" id="tag_reclamacao"><span></span>Reclamação</a></li> <li><a href="/categorias/vida" id="tag_vida"><span></span>Vida</a></li></ul>
+<hr/>
+<h2>📝 Artigos</h2>
+<ul class="article-list"><li>23 - Mai - 2025 - <a href="/artigos/funis-eu-so-preciso-de-0,007">Funis: Eu só preciso de 0,007%</a></li><li>01 - Mai - 2025 - <a href="/artigos/28-anos-de-existencia.-e-agora">28 anos de existência. E agora?</a></li></ul>
+<hr/>
+<h2>⌛ Minha vida em semanas</h2>
+<p>Cada quadrado, uma semana.</p>
+<p>Cada linha, um ano. </p>
+<figure class="life-grid-container">
+<canvas class="life-grid" id="lifeGrid"></canvas>
+<figcaption>💀 A morte, inelutável, imperará.</figcaption>
+</figure>
+<style>
+.life-grid-container {
+  max-width: 100%;
+  margin: 16px auto;
+  text-align: center;
+}
+.life-grid-container canvas {
+  max-width: 100%;
+  height: auto;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const canvas = document.getElementById("lifeGrid");
+  const ctx = canvas.getContext("2d");
+  const totalWeeks = 4696;
+  const livedWeeks = 1465;
+  const weeksPerRow = 52;
+  const rows = 91;
+  const baseSquareSize = 10;
+  const baseGap = 2;
+  let blinkState = true;
+  function resizeCanvas() {
+    const container = canvas.parentElement;
+    const containerWidth = container.clientWidth;
+    const maxCanvasWidth = Math.min(containerWidth, weeksPerRow * (baseSquareSize + baseGap) - baseGap);
+    const scale = maxCanvasWidth / (weeksPerRow * (baseSquareSize + baseGap) - baseGap);
+    const squareSize = baseSquareSize * scale;
+    const gap = baseGap * scale;
+    canvas.width = weeksPerRow * (squareSize + gap) - gap;
+    canvas.height = rows * (squareSize + gap) - gap;
+    return { squareSize, gap };
+  }
+  function drawGrid() {
+    const { squareSize, gap } = resizeCanvas();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let week = 0; week < totalWeeks; week++) {
+      const row = Math.floor(week / weeksPerRow);
+      const col = week % weeksPerRow;
+      const x = col * (squareSize + gap);
+      const y = row * (squareSize + gap);
+      if (week < livedWeeks - 1) {
+        ctx.fillStyle = "#9999ff80"; // Semanas vividas
+        ctx.fillRect(x, y, squareSize, squareSize);
+      } else if (week === livedWeeks - 1) {
+        ctx.fillStyle = blinkState ? "#6666cc" : "#333366"; // Semana atual (piscando)
+        ctx.fillRect(x, y, squareSize, squareSize);
+      } else {
+        ctx.fillStyle = "#333333"; // Semanas futuras
+        ctx.fillRect(x, y, squareSize, squareSize);
+      }
+    }
+  }
+  function animate() {
+    blinkState = !blinkState;
+    drawGrid();
+    setTimeout(animate, 1000);
+  }
+  window.addEventListener("resize", drawGrid);
+  drawGrid();
+  animate();
+});
+</script>
+<hr/>
+</main>
+</body>
+
+</html>
